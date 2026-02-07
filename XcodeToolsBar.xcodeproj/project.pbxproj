@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		06A16EFE2F3729F90008930B /* StatsCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCacheTests.swift; sourceTree = "<group>"; };
 		AA100001 /* XcodeToolsBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeToolsBarApp.swift; sourceTree = "<group>"; };
 		AA100002 /* StatsCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCache.swift; sourceTree = "<group>"; };
 		AA100003 /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
@@ -39,11 +40,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06A16EFD2F3729DE0008930B /* XcodeToolsBarTests */ = {
+			isa = PBXGroup;
+			children = (
+				06A16EFE2F3729F90008930B /* StatsCacheTests.swift */,
+			);
+			path = XcodeToolsBarTests;
+			sourceTree = "<group>";
+		};
 		AA300001 = {
 			isa = PBXGroup;
 			children = (
 				AA300002 /* XcodeToolsBar */,
 				AA300006 /* Products */,
+				06A16EFD2F3729DE0008930B /* XcodeToolsBarTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -363,7 +373,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = AA400002 /* Project object */;
 }

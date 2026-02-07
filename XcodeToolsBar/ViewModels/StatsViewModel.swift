@@ -27,15 +27,12 @@ final class StatsViewModel {
     // MARK: - Computed Properties
 
     var todayActivity: DailyActivity? {
-        let today = formatDate(Date())
-        return stats?.dailyActivity.first { $0.date == today }
+        let calendar = Calendar.current
+        return stats?.dailyActivity.first { calendar.isDateInToday($0.date) }
     }
 
     var daysSinceFirstSession: Int? {
-        guard let dateString = stats?.firstSessionDate else { return nil }
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        guard let firstDate = formatter.date(from: dateString) else { return nil }
+        guard let firstDate = stats?.firstSessionDate else { return nil }
         return Calendar.current.dateComponents([.day], from: firstDate, to: Date()).day
     }
 
@@ -55,10 +52,7 @@ final class StatsViewModel {
     }
 
     var longestSessionDate: String? {
-        guard let timestamp = stats?.longestSession.timestamp else { return nil }
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        guard let date = formatter.date(from: timestamp) else { return nil }
+        guard let date = stats?.longestSession.timestamp else { return nil }
         let display = DateFormatter()
         display.dateStyle = .medium
         display.timeStyle = .none
@@ -107,7 +101,7 @@ final class StatsViewModel {
 
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: path))
-            stats = try JSONDecoder().decode(StatsCache.self, from: data)
+            stats = try StatsCache.decode(from: data)
             error = nil
         } catch {
             self.error = "Unable to read stats"
@@ -148,12 +142,6 @@ final class StatsViewModel {
     }
 
     // MARK: - Helpers
-
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
-    }
 
     func formatTokenCount(_ count: Int) -> String {
         if count >= 1_000_000 {
