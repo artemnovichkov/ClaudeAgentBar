@@ -27,14 +27,25 @@ struct DailyActivityChart: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            Picker("Metric", selection: $selectedMetric) {
+            HStack(spacing: 1) {
                 ForEach(ActivityMetric.allCases, id: \.self) { metric in
-                    Text(metric.rawValue).tag(metric)
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            selectedMetric = metric
+                        }
+                    } label: {
+                        Text(metric.rawValue)
+                            .font(.subheadline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 3)
+                            .background(selectedMetric == metric ? .white.opacity(0.1) : .clear, in: RoundedRectangle(cornerRadius: 4))
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
                 }
             }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .controlSize(.small)
+            .padding(2)
+            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 6))
             
             Chart(activities) { activity in
                 BarMark(
@@ -66,6 +77,7 @@ struct DailyActivityChart: View {
                     AxisValueLabel(format: .dateTime.month().day())
                 }
             }
+            .chartXScale(range: .plotDimension(padding: 12))
             .chartXSelection(value: $selectedDate)
             .frame(height: 70)
         }
@@ -91,4 +103,3 @@ struct DailyActivityChart: View {
     ])
     .padding()
 }
-

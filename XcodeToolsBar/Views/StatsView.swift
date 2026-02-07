@@ -36,55 +36,63 @@ struct StatsView: View {
     // MARK: - Stats Content
 
     private func statsContent(_ stats: StatsCache) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 16) {
             headerSection(stats)
             todaySection()
             dailyChartSection()
-            HStack(spacing: 8) {
-                allTimeSection(stats)
-                longestSessionSection(stats)
-            }
+            summarySection(stats)
             modelUsageSection(stats)
             hourlyChartSection()
             footerSection()
         }
-        .padding(12)
+        .padding(16)
     }
 
     // MARK: - Header
 
     private func headerSection(_ stats: StatsCache) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Claude Agent Stats")
+        HStack(alignment: .center) {
+            Image(systemName: "hammer.fill")
+                .font(.title2)
+                .foregroundStyle(.blue.gradient)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Claude Agent")
                     .font(.headline)
-                Text("Updated: \(stats.lastComputedDate, format: .dateTime.day().month().year())")
+                Text(stats.lastComputedDate, format: .dateTime.day().month().year())
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Image(systemName: "hammer.fill")
-                .foregroundStyle(.blue)
+            Button {
+                viewModel.loadStats()
+            } label: {
+                Image(systemName: "arrow.clockwise")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
         }
     }
 
     // MARK: - Today
 
     private func todaySection() -> some View {
-        GroupBox("Today") {
+        VStack(alignment: .leading, spacing: 8) {
+            sectionHeader("Today")
             if let today = viewModel.todayActivity {
-                HStack {
-                    statCell("Messages", value: "\(today.messageCount)")
+                HStack(spacing: 0) {
+                    statPill(value: "\(today.messageCount)", label: "Messages", color: .blue)
                     Spacer()
-                    statCell("Sessions", value: "\(today.sessionCount)")
+                    statPill(value: "\(today.sessionCount)", label: "Sessions", color: .green)
                     Spacer()
-                    statCell("Tool Calls", value: "\(today.toolCallCount)")
+                    statPill(value: "\(today.toolCallCount)", label: "Tools", color: .orange)
                 }
             } else {
-                Text("No activity today")
+                Text("No activity yet")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 4)
             }
         }
     }
@@ -92,64 +100,74 @@ struct StatsView: View {
     // MARK: - Daily Chart
 
     private func dailyChartSection() -> some View {
-        GroupBox("Daily Activity") {
+        VStack(alignment: .leading, spacing: 8) {
+            sectionHeader("Daily Activity")
             let activities = viewModel.recentDailyActivity
             if activities.isEmpty {
                 Text("No data")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.tertiary)
             } else {
                 DailyActivityChart(activities: activities)
             }
         }
     }
 
-    // MARK: - All Time
+    // MARK: - Summary (All Time + Best Session)
 
-    private func allTimeSection(_ stats: StatsCache) -> some View {
-        GroupBox("All Time") {
-            VStack(spacing: 4) {
-                row("Sessions", value: "\(stats.totalSessions)")
-                row("Messages", value: "\(stats.totalMessages)")
-                if let days = viewModel.daysSinceFirstSession {
-                    row("Days", value: "\(days)")
-                }
-                if let peakHour = viewModel.peakHour {
-                    row("Peak", value: peakHour)
+    private func summarySection(_ stats: StatsCache) -> some View {
+        HStack(alignment: .top, spacing: 0) {
+            VStack(alignment: .leading, spacing: 6) {
+                sectionHeader("All Time")
+                VStack(spacing: 3) {
+                    row("Sessions", value: "\(stats.totalSessions)")
+                    row("Messages", value: "\(stats.totalMessages)")
+                    if let days = viewModel.daysSinceFirstSession {
+                        row("Days", value: "\(days)")
+                    }
+                    if let peakHour = viewModel.peakHour {
+                        row("Peak", value: peakHour)
+                    }
                 }
             }
-        }
-    }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-    // MARK: - Longest Session
+            Divider()
+                .padding(.horizontal, 10)
 
-    private func longestSessionSection(_ stats: StatsCache) -> some View {
-        GroupBox("Best Session") {
-            VStack(spacing: 4) {
-                if let duration = viewModel.formattedLongestSessionDuration {
-                    row("Duration", value: duration)
-                }
-                row("Messages", value: "\(stats.longestSession.messageCount)")
-                if let date = viewModel.longestSessionDate {
-                    row("Date", value: date)
+            VStack(alignment: .leading, spacing: 6) {
+                sectionHeader("Best Session")
+                VStack(spacing: 3) {
+                    if let duration = viewModel.formattedLongestSessionDuration {
+                        row("Duration", value: duration)
+                    }
+                    row("Messages", value: "\(stats.longestSession.messageCount)")
+                    if let date = viewModel.longestSessionDate {
+                        row("Date", value: date)
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(10)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
     }
 
     // MARK: - Model Usage
 
     private func modelUsageSection(_ stats: StatsCache) -> some View {
-        GroupBox("Model Usage") {
-            VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
+            sectionHeader("Models")
+            VStack(spacing: 4) {
                 ForEach(viewModel.sortedModelNames, id: \.self) { name in
                     if let usage = stats.modelUsage[name] {
+                        let totalTokens = usage.inputTokens + usage.outputTokens + usage.cacheReadInputTokens
                         HStack {
-                            Text(name)
+                            Text(viewModel.shortModelName(name))
                                 .font(.subheadline)
                             Spacer()
-                            Text("\(viewModel.formatTokenCount(usage.inputTokens + usage.outputTokens + usage.cacheReadInputTokens))")
-                                .font(.subheadline)
+                            Text(viewModel.formatTokenCount(totalTokens))
+                                .font(.subheadline.monospacedDigit())
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -161,12 +179,13 @@ struct StatsView: View {
     // MARK: - Hourly Chart
 
     private func hourlyChartSection() -> some View {
-        GroupBox("Hourly Distribution") {
+        VStack(alignment: .leading, spacing: 8) {
+            sectionHeader("Hourly Distribution")
             let hourCounts = viewModel.sortedHourCounts
             if hourCounts.isEmpty {
                 Text("No data")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.tertiary)
             } else {
                 HourlyDistributionChart(hourCounts: hourCounts)
             }
@@ -181,16 +200,26 @@ struct StatsView: View {
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
             }
+            .buttonStyle(.plain)
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
         }
     }
 
     // MARK: - Helpers
 
-    private func statCell(_ title: String, value: String) -> some View {
+    private func sectionHeader(_ title: String) -> some View {
+        Text(title)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.secondary)
+    }
+
+    private func statPill(value: String, label: String, color: Color) -> some View {
         VStack(spacing: 2) {
             Text(value)
-                .font(.title2.bold())
-            Text(title)
+                .font(.title2.bold().monospacedDigit())
+                .foregroundStyle(color)
+            Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -206,9 +235,8 @@ struct StatsView: View {
         }
         .font(.subheadline)
     }
-
 }
+
 #Preview {
     StatsView()
 }
-

@@ -41,7 +41,7 @@ struct HourlyDistributionChart: View {
                 }
             }
         }
-        .chartXScale(domain: 0...23)
+        .chartXScale(domain: 0...23, range: .plotDimension(padding: 12))
         .chartXSelection(value: $selectedHour)
         .frame(height: 80)
     }

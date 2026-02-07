@@ -143,6 +143,14 @@ final class StatsViewModel {
 
     // MARK: - Helpers
 
+    func shortModelName(_ name: String) -> String {
+        let parts = name.split(separator: "-")
+        guard parts.count >= 4, parts[0] == "claude" else { return name }
+        let family = parts[1].capitalized
+        let version = "\(parts[2]).\(parts[3])"
+        return "\(family) \(version)"
+    }
+
     func formatTokenCount(_ count: Int) -> String {
         if count >= 1_000_000 {
             return String(format: "%.1fM", Double(count) / 1_000_000)
