@@ -2,7 +2,11 @@ import SwiftUI
 import Charts
 
 struct StatsView: View {
-    @State private var viewModel = StatsViewModel()
+    @State private var viewModel: StatsViewModel
+
+    init(viewModel: StatsViewModel = StatsViewModel()) {
+        _viewModel = State(initialValue: viewModel)
+    }
 
     var body: some View {
         Group {
@@ -20,15 +24,10 @@ struct StatsView: View {
     // MARK: - Error
 
     private func errorView(_ message: String) -> some View {
-        VStack(spacing: 8) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-            Text(message)
-                .font(.headline)
-            Button("Retry") {
-                viewModel.loadStats()
-            }
+        ContentUnavailableView {
+            Label("No Statistics Yet", systemImage: "chart.bar.xaxis")
+        } description: {
+            Text("Use Claude Agent in Xcode to generate statistics. Stats update the next day.")
         }
         .padding()
     }
@@ -207,3 +206,11 @@ struct StatsView: View {
 #Preview {
     StatsView()
 }
+#Preview("Empty State") {
+    StatsView(viewModel: {
+        let vm = StatsViewModel(loadOnInit: false)
+        vm.setError("No stats file found")
+        return vm
+    }())
+}
+

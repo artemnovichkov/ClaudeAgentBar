@@ -15,9 +15,16 @@ final class StatsViewModel {
         return "\(home)/Library/Developer/Xcode/CodingAssistant/ClaudeAgentConfig/stats-cache.json"
     }()
 
-    init() {
-        loadStats()
-        startMonitoring()
+    init(loadOnInit: Bool = true) {
+        if loadOnInit {
+            loadStats()
+            startMonitoring()
+        }
+    }
+
+    func setError(_ message: String) {
+        error = message
+        stats = nil
     }
 
     deinit {
