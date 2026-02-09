@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		061303F62F3A37AA00486BE8 /* StatsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061303F52F3A37AA00486BE8 /* StatsClient.swift */; };
 		AA000001 /* CodexAgentBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100001 /* CodexAgentBarApp.swift */; };
 		AA000002 /* StatsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100002 /* StatsCache.swift */; };
 		AA000003 /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100003 /* StatsViewModel.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		061303F52F3A37AA00486BE8 /* StatsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsClient.swift; sourceTree = "<group>"; };
 		06A16EFE2F3729F90008930B /* StatsCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCacheTests.swift; sourceTree = "<group>"; };
 		AA100001 /* CodexAgentBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexAgentBarApp.swift; sourceTree = "<group>"; };
 		AA100002 /* StatsCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCache.swift; sourceTree = "<group>"; };
@@ -40,6 +42,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		061303F42F3A37A300486BE8 /* StatsClient */ = {
+			isa = PBXGroup;
+			children = (
+				061303F52F3A37AA00486BE8 /* StatsClient.swift */,
+			);
+			path = StatsClient;
+			sourceTree = "<group>";
+		};
 		06A16EFD2F3729DE0008930B /* CodexAgentBarTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +70,7 @@
 		AA300002 /* CodexAgentBar */ = {
 			isa = PBXGroup;
 			children = (
+				061303F42F3A37A300486BE8 /* StatsClient */,
 				AA100001 /* CodexAgentBarApp.swift */,
 				AA300003 /* Models */,
 				AA300004 /* ViewModels */,
@@ -132,7 +143,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					AA400001 = {
 						CreatedOnToolsVersion = 16.0;
@@ -173,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				061303F62F3A37AA00486BE8 /* StatsClient.swift in Sources */,
 				AA000001 /* CodexAgentBarApp.swift in Sources */,
 				AA000002 /* StatsCache.swift in Sources */,
 				AA000003 /* StatsViewModel.swift in Sources */,
@@ -219,6 +231,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -281,6 +294,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -310,6 +324,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CodexAgentBar/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -335,6 +350,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CodexAgentBar/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
