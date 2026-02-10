@@ -8,10 +8,9 @@ A macOS menu bar app for tracking Claude Agent stats from Xcode.
 
 ## Features
 
-- Today's activity (messages, sessions, tool calls)
-- Daily activity chart (last 14 days)
+- Weekly activity chart (messages, sessions, tool calls)
 - All time stats with peak hour
-- Best session details
+- Longest session details
 - Model usage with token counts
 - Hourly distribution chart
 - Auto-updates when stats change
