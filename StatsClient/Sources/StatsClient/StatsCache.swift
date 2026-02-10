@@ -35,7 +35,7 @@ public struct DailyModelTokens: Decodable, Sendable {
     public let tokensByModel: [String: Int]
 }
 
-public struct ModelUsage: Decodable, Sendable {
+public struct ModelUsage: Decodable, Sendable, Equatable {
     public let inputTokens: Int
     public let outputTokens: Int
     public let cacheReadInputTokens: Int
