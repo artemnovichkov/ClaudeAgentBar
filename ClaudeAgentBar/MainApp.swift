@@ -6,7 +6,7 @@ import StatsFeature
 struct MainApp: App {
     var body: some Scene {
         MenuBarExtra("ClaudeAgentBar", systemImage: "hammer.fill") {
-            StatsView(viewModel: .init(statsClient: .happyPath))
+            StatsView(viewModel: .init(statsClient: .live))
         }
         .menuBarExtraStyle(.window)
     }
